@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="column">
-      <div v-if="showSignIn" ref="firebaseui"></div>
+      <div v-if="!user" ref="firebaseui"></div>
     </div>
     <br />
   </div>
@@ -15,7 +15,7 @@ export default {
   name: "SignIn",
   data() {
     return {
-      showSignIn: true,
+      user: null,
     };
   },
   mounted() {
@@ -29,12 +29,8 @@ export default {
       measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID,
     };
     firebase.initializeApp(firebaseConfig);
-    this.ui = firebaseui.auth.AuthUI.getInstance();
-    if (!this.ui) {
-      this.ui = new firebaseui.auth.AuthUI(firebase.auth());
-    }
+    this.ui = new firebaseui.auth.AuthUI(firebase.auth());
     this.uiConfig = {
-      signInSuccessUrl: window.location.href,
       signInOptions: [
         {
           provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
@@ -45,7 +41,7 @@ export default {
     firebase.auth().onAuthStateChanged((user) => {
       console.log(user);
       if (user) {
-        this.showSignIn = false;
+        this.user = user;
       } else {
         this.ui.start(this.$refs.firebaseui, this.uiConfig);
       }
