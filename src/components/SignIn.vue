@@ -31,6 +31,7 @@ export default {
     firebase.initializeApp(firebaseConfig);
     this.ui = new firebaseui.auth.AuthUI(firebase.auth());
     this.uiConfig = {
+      signInSuccessUrl: window.location.href,
       signInOptions: [
         {
           provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
