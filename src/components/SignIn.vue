@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="column">
-      <div v-if="!user" ref="firebaseui"></div>
+      <div ref="firebaseui"></div>
     </div>
     <br />
   </div>
@@ -13,11 +13,6 @@ import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 export default {
   name: "SignIn",
-  data() {
-    return {
-      user: null,
-    };
-  },
   mounted() {
     const firebaseConfig = {
       apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -42,7 +37,10 @@ export default {
     firebase.auth().onAuthStateChanged((user) => {
       console.log(user);
       if (user) {
-        this.user = user;
+        user.getIdToken().then((token) => {
+          this.token = token;
+          this.$emit("signed-in", this.token, user.uid);
+        });
       } else {
         this.ui.start(this.$refs.firebaseui, this.uiConfig);
       }

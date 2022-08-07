@@ -1,5 +1,6 @@
 # build stage
 FROM node:lts-alpine as build-stage
+ENV VUE_APP_BACKEND_URL https://recblab-backend.herokuapp.com
 ENV VUE_APP_FIREBASE_API_KEY AIzaSyDVXIlfI6TaN9HTiBr5LOO_og5llrmHGJY
 ENV VUE_APP_FIREBASE_AUTH_DOMAIN blabsnap.firebaseapp.com
 ENV VUE_APP_FIREBASE_PROJECT_ID blabsnap
