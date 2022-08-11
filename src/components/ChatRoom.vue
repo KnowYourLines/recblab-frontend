@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="column"></div>
+    <div class="column"><button @click="returnHome">Home</button></div>
   </div>
 </template>
 
@@ -21,6 +21,15 @@ export default {
     return {
       roomWebSocket: null,
     };
+  },
+  methods: {
+    returnHome: function () {
+      if (this.roomWebSocket) {
+        this.roomWebSocket.close();
+      }
+      const url = new URL(window.location.href);
+      window.location.href = url.origin;
+    },
   },
   mounted() {
     const backendUrl = new URL(process.env.VUE_APP_BACKEND_URL);

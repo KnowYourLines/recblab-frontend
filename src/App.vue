@@ -34,7 +34,7 @@ export default {
       this.userId = userId;
     },
     newRoom: function (room) {
-      let url = new URL(window.location.href);
+      const url = new URL(window.location.href);
       url.searchParams.set("room", room);
       window.location.href = url;
     },
