@@ -1,36 +1,26 @@
 <template>
   <div>
-    <div class="column"><button @click="createNewRoom">New room</button></div>
+    <div class="column"></div>
   </div>
 </template>
 
 <script>
-import { v4 as uuidv4 } from "uuid";
 export default {
-  name: "HomePage",
+  name: "ChatRoom",
   props: {
-    authToken: {
+    room: {
       type: String,
       required: true,
     },
-    userId: {
+    authToken: {
       type: String,
       required: true,
     },
   },
   data() {
     return {
-      userWebSocket: null,
+      roomWebSocket: null,
     };
-  },
-  methods: {
-    createNewRoom: function () {
-      if (this.userWebSocket) {
-        this.userWebSocket.close();
-      }
-      const room = uuidv4();
-      this.$emit("new-room", room);
-    },
   },
   mounted() {
     const backendUrl = new URL(process.env.VUE_APP_BACKEND_URL);
@@ -41,26 +31,26 @@ export default {
       backendUrl.hostname +
       ":" +
       backendUrl.port +
-      "/ws/user/" +
-      this.userId +
+      "/ws/room/" +
+      this.room +
       "/?token=" +
       this.authToken;
-    if (this.userWebSocket) {
-      this.userWebsocket.close();
+    if (this.roomWebSocket) {
+      this.roomWebsocket.close();
     }
-    this.userWebSocket = new WebSocket(path);
-    this.userWebSocket.onopen = () => {
-      console.log("User WebSocket open");
+    this.roomWebSocket = new WebSocket(path);
+    this.roomWebSocket.onopen = () => {
+      console.log("Room WebSocket open");
     };
-    this.userWebSocket.onmessage = (message) => {
+    this.roomWebSocket.onmessage = (message) => {
       const data = JSON.parse(message.data);
       console.log(data);
     };
-    this.userWebSocket.onerror = (e) => {
+    this.roomWebSocket.onerror = (e) => {
       console.log(e.message);
     };
-    this.userWebSocket.onclose = () => {
-      console.log("User WebSocket closed");
+    this.roomWebSocket.onclose = () => {
+      console.log("Room WebSocket closed");
     };
   },
 };
