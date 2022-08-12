@@ -1,6 +1,15 @@
 <template>
   <div>
-    <div class="column"><button @click="returnHome">Home</button></div>
+    <div class="column-right"></div>
+    <div class="column-center"><button @click="returnHome">Home</button></div>
+    <div class="column-left">
+      Room members:<br /><br />
+      <div id="members">
+        <span v-for="member in roomMembers" :key="member">
+          {{ member }}<br />
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -20,6 +29,7 @@ export default {
   data() {
     return {
       roomWebSocket: null,
+      roomMembers: [],
     };
   },
   methods: {
@@ -54,6 +64,9 @@ export default {
     this.roomWebSocket.onmessage = (message) => {
       const data = JSON.parse(message.data);
       console.log(data);
+      if ("members" in data) {
+        this.roomMembers = data.members;
+      }
     };
     this.roomWebSocket.onerror = (e) => {
       console.log(e.message);
@@ -67,15 +80,35 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#members {
+  height: 15vh;
+  overflow-y: auto;
+  overflow-x: visible;
+}
 @media (orientation: landscape) {
-  .column {
+  .column-left {
+    float: left;
+    width: 33.333%;
+  }
+  .column-right {
+    float: right;
+    width: 33.333%;
+  }
+  .column-center {
     display: inline-block;
-    width: 100%;
+    width: 33.333%;
   }
 }
 @media (orientation: portrait) {
-  .column {
-    display: inline-block;
+  .column-left {
+    width: 100%;
+    background-color: rgb(227, 246, 255);
+  }
+  .column-right {
+    width: 100%;
+    background-color: rgb(227, 246, 255);
+  }
+  .column-center {
     width: 100%;
   }
 }
