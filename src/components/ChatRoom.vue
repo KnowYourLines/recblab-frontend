@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div class="column-right"></div>
-    <div class="column-center"><button @click="returnHome">Home</button></div>
-    <div class="column-left">
+    <div class="column-right">
       Room members:<br /><br />
       <div id="members">
         <span v-for="member in roomMembers" :key="member">
@@ -10,12 +8,30 @@
         </span>
       </div>
     </div>
+    <div class="column-center">
+      <br />
+      <Toggle v-model="privateRoom" @change="updatePrivacy">
+        <template v-slot:label="{ checked, classList }">
+          <span :class="classList.label">{{
+            checked ? "Private" : "Public"
+          }}</span>
+        </template>
+      </Toggle>
+      <br /><br />
+    </div>
+    <div class="column-left">
+      <button @click="returnHome">Home</button>
+    </div>
   </div>
 </template>
 
 <script>
+import Toggle from "@vueform/toggle";
 export default {
   name: "ChatRoom",
+  components: {
+    Toggle,
+  },
   props: {
     room: {
       type: String,
@@ -30,6 +46,7 @@ export default {
     return {
       roomWebSocket: null,
       roomMembers: [],
+      privateRoom: false,
     };
   },
   methods: {
@@ -39,6 +56,14 @@ export default {
       }
       const url = new URL(window.location.href);
       window.location.href = url.origin;
+    },
+    updatePrivacy: function () {
+      this.roomWebSocket.send(
+        JSON.stringify({
+          command: "update_privacy",
+          privacy: this.privateRoom,
+        })
+      );
     },
   },
   mounted() {
@@ -63,9 +88,10 @@ export default {
     };
     this.roomWebSocket.onmessage = (message) => {
       const data = JSON.parse(message.data);
-      console.log(data);
       if ("members" in data) {
         this.roomMembers = data.members;
+      } else if ("privacy" in data) {
+        this.privateRoom = data.privacy;
       }
     };
     this.roomWebSocket.onerror = (e) => {
@@ -77,8 +103,7 @@ export default {
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style src="@/assets/toggle.css"></style>
 <style scoped>
 #members {
   height: 15vh;
