@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="userAllowed">
     <div class="column-right">
       Room members:<br /><br />
       <div id="members">
@@ -22,6 +22,9 @@
     <div class="column-left">
       <button @click="returnHome">Home</button>
     </div>
+  </div>
+  <div class="column-center" v-else>
+    User not allowed in private room. Access requested.
   </div>
 </template>
 
@@ -47,6 +50,7 @@ export default {
       roomWebSocket: null,
       roomMembers: [],
       privateRoom: false,
+      userAllowed: true,
     };
   },
   methods: {
@@ -92,6 +96,8 @@ export default {
         this.roomMembers = data.members;
       } else if ("privacy" in data) {
         this.privateRoom = data.privacy;
+      } else if ("allowed" in data) {
+        this.userAllowed = data.allowed;
       }
     };
     this.roomWebSocket.onerror = (e) => {
