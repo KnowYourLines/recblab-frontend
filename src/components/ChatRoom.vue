@@ -120,13 +120,19 @@ export default {
       const data = JSON.parse(message.data);
       if ("members" in data) {
         this.roomMembers = data.members;
+      } else if (data.type == "refresh_members") {
+        this.roomWebSocket.send(
+          JSON.stringify({
+            command: "fetch_members",
+          })
+        );
       } else if ("privacy" in data) {
         this.privateRoom = data.privacy;
       } else if ("allowed" in data) {
         this.userAllowed = data.allowed;
       } else if ("join_requests" in data) {
         this.joinRequests = data.join_requests;
-      } else if ("refresh_join_requests" in data) {
+      } else if (data.type == "refresh_join_requests") {
         this.roomWebSocket.send(
           JSON.stringify({
             command: "fetch_join_requests",
