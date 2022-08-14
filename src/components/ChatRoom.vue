@@ -21,6 +21,31 @@
     </div>
     <div class="column-left">
       <button @click="returnHome">Home</button>
+      <div v-if="privateRoom">
+        <span><br />Users requesting to join:<br /><br /></span>
+        <div id="requests">
+          <span v-for="request in joinRequests" :key="request.user">
+            {{ request.user__display_name }}
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn"
+                @click="acceptRequest(request.user__username)"
+              >
+                Accept
+              </button>
+              <button
+                type="submit"
+                class="btn btn__primary"
+                @click="rejectRequest(request.user__username)"
+              >
+                Reject
+              </button>
+            </div>
+            <br />
+          </span>
+        </div>
+      </div>
     </div>
   </div>
   <div class="column-center" v-else>
@@ -51,6 +76,7 @@ export default {
       roomMembers: [],
       privateRoom: false,
       userAllowed: true,
+      joinRequests: [],
     };
   },
   methods: {
@@ -98,6 +124,14 @@ export default {
         this.privateRoom = data.privacy;
       } else if ("allowed" in data) {
         this.userAllowed = data.allowed;
+      } else if ("join_requests" in data) {
+        this.joinRequests = data.join_requests;
+      } else if ("refresh_join_requests" in data) {
+        this.roomWebSocket.send(
+          JSON.stringify({
+            command: "fetch_join_requests",
+          })
+        );
       }
     };
     this.roomWebSocket.onerror = (e) => {
