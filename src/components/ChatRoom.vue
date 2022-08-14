@@ -128,7 +128,7 @@ export default {
         );
       } else if ("privacy" in data) {
         this.privateRoom = data.privacy;
-      } else if ("refresh_privacy" in data) {
+      } else if (data.type == "refresh_privacy") {
         this.roomWebSocket.send(JSON.stringify({ command: "fetch_privacy" }));
       } else if ("allowed" in data) {
         this.userAllowed = data.allowed;
