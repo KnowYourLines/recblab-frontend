@@ -95,6 +95,16 @@ export default {
         })
       );
     },
+    acceptRequest: function (username) {
+      this.roomWebSocket.send(
+        JSON.stringify({ command: "approve_user", username: username })
+      );
+    },
+    rejectRequest: function (username) {
+      this.roomWebSocket.send(
+        JSON.stringify({ command: "reject_user", username: username })
+      );
+    },
   },
   mounted() {
     const backendUrl = new URL(process.env.VUE_APP_BACKEND_URL);
@@ -132,6 +142,10 @@ export default {
         this.roomWebSocket.send(JSON.stringify({ command: "fetch_privacy" }));
       } else if ("allowed" in data) {
         this.userAllowed = data.allowed;
+      } else if (data.type == "refresh_allowed_status") {
+        this.roomWebSocket.send(
+          JSON.stringify({ command: "fetch_allowed_status" })
+        );
       } else if ("join_requests" in data) {
         this.joinRequests = data.join_requests;
       } else if (data.type == "refresh_join_requests") {
@@ -151,7 +165,7 @@ export default {
   },
 };
 </script>
-<style src="@/assets/toggle.css"></style>
+
 <style scoped>
 #members {
   height: 15vh;

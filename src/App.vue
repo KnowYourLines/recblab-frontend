@@ -46,6 +46,7 @@ export default {
 };
 </script>
 
+<style src="@/assets/toggle.css"></style>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
