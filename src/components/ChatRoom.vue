@@ -1,12 +1,11 @@
 <template>
   <div v-if="userAllowed">
-    <div class="column-right">
-      Room members:<br /><br />
-      <div id="members">
-        <span v-for="member in roomMembers" :key="member">
-          {{ member }}<br />
-        </span>
-      </div>
+    <div class="column-left">
+      <img
+        src="@/assets/icons8-left-arrow-50.png"
+        @click="returnHome"
+        class="back-button"
+      />
     </div>
     <div class="column-center">
       <br />
@@ -19,12 +18,13 @@
       </Toggle>
       <br /><br />
     </div>
-    <div class="column-left">
-      <img
-        src="@/assets/icons8-left-arrow-50.png"
-        @click="returnHome"
-        class="back-button"
-      />
+    <div class="column-right">
+      <div id="members">
+        Room members:<br /><br />
+        <span v-for="member in roomMembers" :key="member">
+          {{ member }}<br />
+        </span>
+      </div>
       <div v-if="privateRoom">
         <span><br />Users requesting to join:<br /><br /></span>
         <div id="requests">
