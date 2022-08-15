@@ -20,7 +20,11 @@
       <br /><br />
     </div>
     <div class="column-left">
-      <button @click="returnHome">Home</button>
+      <img
+        src="@/assets/icons8-left-arrow-50.png"
+        @click="returnHome"
+        class="back-button"
+      />
       <div v-if="privateRoom">
         <span><br />Users requesting to join:<br /><br /></span>
         <div id="requests">
@@ -203,5 +207,13 @@ export default {
   .column-center {
     width: 100%;
   }
+}
+.back-button {
+  padding: 6px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.back-button:hover {
+  background: #e0e0e0;
 }
 </style>
