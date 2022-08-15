@@ -88,6 +88,11 @@ export default {
       window.location.href = url.origin;
     },
     updatePrivacy: function () {
+      if (!this.privateRoom) {
+        this.roomWebSocket.send(
+          JSON.stringify({ command: "approve_all_users" })
+        );
+      }
       this.roomWebSocket.send(
         JSON.stringify({
           command: "update_privacy",
