@@ -8,6 +8,15 @@
       />
     </div>
     <div class="column-center">
+      <div v-if="shareable">
+        <img
+          src="@/assets/icons8-share-30.png"
+          @click="share"
+          class="share-button"
+        />
+      </div>
+    </div>
+    <div class="column-right">
       <br />
       <Toggle v-model="privateRoom" @change="updatePrivacy">
         <template v-slot:label="{ checked, classList }">
@@ -17,8 +26,6 @@
         </template>
       </Toggle>
       <br /><br />
-    </div>
-    <div class="column-right">
       <div id="members">
         Room members:<br /><br />
         <span v-for="member in roomMembers" :key="member">
@@ -81,6 +88,7 @@ export default {
       privateRoom: false,
       userAllowed: true,
       joinRequests: [],
+      shareable: null,
     };
   },
   methods: {
@@ -114,8 +122,15 @@ export default {
         JSON.stringify({ command: "reject_user", username: username })
       );
     },
+    share: function () {
+      const shareData = {
+        url: window.location.href,
+      };
+      navigator.share(shareData);
+    },
   },
   mounted() {
+    this.shareable = typeof navigator.share === "function";
     const backendUrl = new URL(process.env.VUE_APP_BACKEND_URL);
     const ws_scheme = backendUrl.protocol == "https:" ? "wss" : "ws";
     const path =
@@ -214,6 +229,14 @@ export default {
   cursor: pointer;
 }
 .back-button:hover {
+  background: #e0e0e0;
+}
+.share-button {
+  padding: 6px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.share-button:hover {
   background: #e0e0e0;
 }
 </style>
