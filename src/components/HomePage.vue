@@ -7,17 +7,16 @@
           <br />
           <div class="notification" @click="visitRoom(notification.room)">
             <strong> {{ notification.room }}</strong>
-            <br />{{ notification.timestamp }}
-            <br />
-            <button
-              type="submit"
-              class="btn btn__primary"
-              @click="exitRoom(notification.room)"
-            >
-              Exit room
-            </button>
-            <br />
+            <br />{{ notification.timestamp }} <br />
           </div>
+          <button
+            type="submit"
+            class="btn btn__primary"
+            @click="exitRoom(notification.room)"
+          >
+            Exit room
+          </button>
+          <br />
         </span>
       </div>
     </div>
@@ -53,9 +52,14 @@ export default {
       this.$emit("new-room", room);
     },
     visitRoom: function (room) {
-      let url = new URL(window.location.href);
+      const url = new URL(window.location.href);
       url.searchParams.set("room", room);
       window.location.href = url;
+    },
+    exitRoom: function (room) {
+      this.userWebSocket.send(
+        JSON.stringify({ command: "exit_room", room_id: room })
+      );
     },
   },
   mounted() {
@@ -82,6 +86,12 @@ export default {
       const data = JSON.parse(message.data);
       if ("notifications" in data) {
         this.notifications = data.notifications;
+      } else if (data.type == "refresh_notifications") {
+        this.userWebSocket.send(
+          JSON.stringify({
+            command: "fetch_notifications",
+          })
+        );
       }
     };
     this.userWebSocket.onerror = (e) => {
