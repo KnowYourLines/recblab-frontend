@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="column">
+      <label for="name">Name:</label><br /><br />
       <div v-if="!editDisplayName">
-        <label for="name">Name:</label><br /><br />
         <strong>{{ displayName }}</strong
         ><br /><img
           src="@/assets/icons8-edit-24.png"
@@ -11,7 +11,6 @@
         />
       </div>
       <div v-else>
-        <label for="name">Name:</label><br /><br />
         <input
           id="name"
           type="text"
