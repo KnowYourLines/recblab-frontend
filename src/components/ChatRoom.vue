@@ -245,4 +245,7 @@ export default {
 .share-button:hover {
   background: #e0e0e0;
 }
+.btn:hover {
+  background: #e0e0e0;
+}
 </style>

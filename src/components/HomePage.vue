@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="column">
-      <button @click="createNewRoom">New room</button>
+      <button class="btn" @click="createNewRoom">New room</button>
       <div id="array-rendering">
         <span v-for="notification in notifications" :key="notification.room">
           <br />
@@ -131,6 +131,9 @@ export default {
   cursor: pointer;
 }
 .notification:hover {
+  background: #e0e0e0;
+}
+.btn:hover {
   background: #e0e0e0;
 }
 </style>
