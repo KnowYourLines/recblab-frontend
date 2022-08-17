@@ -2,6 +2,7 @@
   <div>
     <div class="column">
       <div v-if="!editDisplayName">
+        <label for="name">Name:</label><br /><br />
         <strong>{{ displayName }}</strong
         ><br /><img
           src="@/assets/icons8-edit-24.png"
@@ -10,7 +11,13 @@
         />
       </div>
       <div v-else>
-        <input type="text" v-model="editableDisplayName" ref="editName" />
+        <label for="name">Name:</label><br /><br />
+        <input
+          id="name"
+          type="text"
+          v-model="editableDisplayName"
+          ref="editName"
+        />
         <br /><img
           src="@/assets/icons8-checkmark-48.png"
           @click="updateDisplayName"
