@@ -1,5 +1,8 @@
 <template>
-  <div v-if="userAllowed">
+  <div class="column-center" v-if="leftPublicRoom">
+    User left public room. Refresh to rejoin.
+  </div>
+  <div v-else-if="userAllowed">
     <div class="column-left">
       <img
         src="@/assets/icons8-left-arrow-50.png"
@@ -89,6 +92,7 @@ export default {
       userAllowed: true,
       joinRequests: [],
       shareable: null,
+      leftPublicRoom: false,
     };
   },
   methods: {
@@ -178,6 +182,8 @@ export default {
             command: "fetch_join_requests",
           })
         );
+      } else if (data.type == "left_public_room") {
+        this.leftPublicRoom = true;
       }
     };
     this.roomWebSocket.onerror = (e) => {
