@@ -1,8 +1,29 @@
 <template>
   <div>
     <div class="column">
+      <div v-if="!editDisplayName">
+        <strong>{{ displayName }}</strong
+        ><br /><img
+          src="@/assets/icons8-edit-24.png"
+          @click="edit"
+          class="edit-button"
+        />
+      </div>
+      <div v-else>
+        <input type="text" v-model="editableDisplayName" ref="editName" />
+        <br /><img
+          src="@/assets/icons8-checkmark-48.png"
+          @click="updateDisplayName"
+          class="edit-button"
+        /><img
+          src="@/assets/icons8-cancel-48.png"
+          @click="cancelEdit"
+          class="edit-button"
+        />
+      </div>
+      <br /><br />
       <button class="btn" @click="createNewRoom">New room</button>
-      <div id="array-rendering">
+      <div>
         <span v-for="notification in notifications" :key="notification.room">
           <br />
           <div class="notification" @click="visitRoom(notification.room)">
@@ -41,6 +62,9 @@ export default {
     return {
       userWebSocket: null,
       notifications: [],
+      displayName: null,
+      editDisplayName: false,
+      editableDisplayName: null,
     };
   },
   methods: {
@@ -59,6 +83,25 @@ export default {
     exitRoom: function (room) {
       this.userWebSocket.send(
         JSON.stringify({ command: "exit_room", room_id: room })
+      );
+    },
+    edit: function () {
+      this.editDisplayName = true;
+      this.$nextTick(() => {
+        this.$refs.editName.select();
+      });
+    },
+    cancelEdit: function () {
+      this.editDisplayName = false;
+      this.editableDisplayName = this.displayName;
+    },
+    updateDisplayName: function () {
+      this.editDisplayName = false;
+      this.userWebSocket.send(
+        JSON.stringify({
+          command: "update_display_name",
+          name: this.editableDisplayName,
+        })
       );
     },
   },
@@ -92,6 +135,9 @@ export default {
             command: "fetch_notifications",
           })
         );
+      } else if ("display_name" in data) {
+        this.displayName = data.display_name;
+        this.editableDisplayName = data.display_name;
       }
     };
     this.userWebSocket.onerror = (e) => {
@@ -118,11 +164,6 @@ export default {
     width: 100%;
   }
 }
-#array-rendering {
-  height: 80vh;
-  overflow-y: auto;
-  overflow-x: visible;
-}
 .notification {
   padding: 6px 10px;
   border-radius: 50%;
@@ -134,6 +175,14 @@ export default {
   background: #e0e0e0;
 }
 .btn:hover {
+  background: #e0e0e0;
+}
+.edit-button {
+  padding: 6px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.edit-button:hover {
   background: #e0e0e0;
 }
 </style>
