@@ -1,13 +1,22 @@
 <template>
   <div class="column-center" v-if="leftPublicRoom">
+    <img
+      src="@/assets/icons8-home-48.png"
+      @click="returnHome"
+      class="home-button"
+    /><img
+      src="@/assets/icons8-update-left-rotation-50.png"
+      @click="refreshPage"
+      class="refresh-button"
+    /><br /><br />
     User left public room. Refresh to rejoin.
   </div>
   <div v-else-if="userAllowed">
     <div class="column-left">
       <img
-        src="@/assets/icons8-left-arrow-50.png"
+        src="@/assets/icons8-home-48.png"
         @click="returnHome"
-        class="back-button"
+        class="home-button"
       />
     </div>
     <div class="column-center">
@@ -63,6 +72,11 @@
     </div>
   </div>
   <div class="column-center" v-else>
+    <img
+      src="@/assets/icons8-home-48.png"
+      @click="returnHome"
+      class="home-button"
+    /><br />
     User not allowed in private room. Access requested.
   </div>
 </template>
@@ -102,6 +116,13 @@ export default {
       }
       const url = new URL(window.location.href);
       window.location.href = url.origin;
+    },
+    refreshPage: function () {
+      if (this.roomWebSocket) {
+        this.roomWebSocket.close();
+      }
+      const url = new URL(window.location.href);
+      window.location.href = url;
     },
     updatePrivacy: function () {
       if (!this.privateRoom) {
@@ -229,12 +250,20 @@ export default {
     width: 100%;
   }
 }
-.back-button {
+.home-button {
   padding: 6px 10px;
   border-radius: 50%;
   cursor: pointer;
 }
-.back-button:hover {
+.home-button:hover {
+  background: #e0e0e0;
+}
+.refresh-button {
+  padding: 6px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.refresh-button:hover {
   background: #e0e0e0;
 }
 .share-button {
