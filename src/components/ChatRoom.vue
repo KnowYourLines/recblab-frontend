@@ -13,6 +13,13 @@
   </div>
   <div v-else-if="userAllowed">
     <div class="column-left">
+      <div v-if="shareable">
+        <img
+          src="@/assets/icons8-share-30.png"
+          @click="share"
+          class="share-button"
+        />
+      </div>
       <img
         src="@/assets/icons8-home-48.png"
         @click="returnHome"
@@ -20,11 +27,31 @@
       />
     </div>
     <div class="column-center">
-      <div v-if="shareable">
-        <img
-          src="@/assets/icons8-share-30.png"
-          @click="share"
-          class="share-button"
+      <br />
+      <label for="name">Room Name:</label><br /><br />
+      <div v-if="!editDisplayName">
+        <strong>{{ displayName }}</strong
+        ><br /><img
+          src="@/assets/icons8-edit-24.png"
+          @click="edit"
+          class="edit-button"
+        />
+      </div>
+      <div v-else>
+        <input
+          id="name"
+          type="text"
+          v-model="editableDisplayName"
+          ref="editName"
+        />
+        <br /><img
+          src="@/assets/icons8-checkmark-48.png"
+          @click="updateDisplayName"
+          class="edit-button"
+        /><img
+          src="@/assets/icons8-cancel-48.png"
+          @click="cancelEdit"
+          class="edit-button"
         />
       </div>
     </div>
@@ -107,6 +134,9 @@ export default {
       joinRequests: [],
       shareable: null,
       leftPublicRoom: false,
+      displayName: null,
+      editDisplayName: false,
+      editableDisplayName: null,
     };
   },
   methods: {
@@ -152,6 +182,25 @@ export default {
         url: window.location.href,
       };
       navigator.share(shareData);
+    },
+    edit: function () {
+      this.editDisplayName = true;
+      this.$nextTick(() => {
+        this.$refs.editName.select();
+      });
+    },
+    cancelEdit: function () {
+      this.editDisplayName = false;
+      this.editableDisplayName = this.displayName;
+    },
+    updateDisplayName: function () {
+      this.editDisplayName = false;
+      this.roomWebSocket.send(
+        JSON.stringify({
+          command: "update_display_name",
+          name: this.editableDisplayName,
+        })
+      );
     },
   },
   mounted() {
@@ -205,6 +254,9 @@ export default {
         );
       } else if (data.type == "left_public_room") {
         this.leftPublicRoom = true;
+      } else if ("display_name" in data) {
+        this.displayName = data.display_name;
+        this.editableDisplayName = data.display_name;
       }
     };
     this.roomWebSocket.onerror = (e) => {
@@ -275,6 +327,14 @@ export default {
   background: #e0e0e0;
 }
 .btn:hover {
+  background: #e0e0e0;
+}
+.edit-button {
+  padding: 6px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.edit-button:hover {
   background: #e0e0e0;
 }
 </style>

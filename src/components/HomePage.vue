@@ -33,7 +33,7 @@
         <span v-for="notification in notifications" :key="notification.room">
           <br />
           <div class="notification" @click="visitRoom(notification.room)">
-            <strong> {{ notification.room }}</strong>
+            <strong> {{ notification.room__display_name }}</strong>
             <br />{{ notification.timestamp }} <br />
           </div>
           <button
