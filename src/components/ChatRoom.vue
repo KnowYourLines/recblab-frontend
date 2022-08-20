@@ -137,6 +137,7 @@ export default {
       displayName: null,
       editDisplayName: false,
       editableDisplayName: null,
+      audio: navigator.mediaDevices.getUserMedia({ audio: true }),
     };
   },
   methods: {

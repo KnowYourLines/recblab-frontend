@@ -36,7 +36,6 @@ export default {
       ],
     };
     firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
       if (user) {
         user.getIdToken().then((token) => {
           this.token = token;
