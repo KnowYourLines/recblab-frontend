@@ -70,6 +70,7 @@
         />
         <CountdownTimer @times-up="timesUp"></CountdownTimer>
       </div>
+      <br/>
     </div>
     <div class="column-right">
       <br />
