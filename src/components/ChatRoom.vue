@@ -54,6 +54,7 @@
           class="edit-button"
         />
       </div>
+      <br /><br />
       <div v-if="!isRecording">
         <img
           src="@/assets/icons8-record-64.png"
@@ -242,9 +243,9 @@ export default {
       const clip = new Audio(audioSrc);
       clip.play();
     },
-    timesUp: function(){
-      this.stopRecording()
-    }
+    timesUp: function () {
+      this.stopRecording();
+    },
   },
   mounted() {
     this.shareable = typeof navigator.share === "function";
