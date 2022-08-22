@@ -67,6 +67,7 @@
           @click="stopRecording"
           class="stop-button"
         />
+        <CountdownTimer @times-up="timesUp"></CountdownTimer>
       </div>
     </div>
     <div class="column-right">
@@ -123,10 +124,12 @@
 </template>
 
 <script>
+import CountdownTimer from "./CountdownTimer.vue";
 import Toggle from "@vueform/toggle";
 export default {
   name: "ChatRoom",
   components: {
+    CountdownTimer,
     Toggle,
   },
   props: {
@@ -239,6 +242,9 @@ export default {
       const clip = new Audio(audioSrc);
       clip.play();
     },
+    timesUp: function(){
+      this.stopRecording()
+    }
   },
   mounted() {
     this.shareable = typeof navigator.share === "function";
