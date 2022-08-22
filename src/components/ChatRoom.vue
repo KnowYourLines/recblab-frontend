@@ -54,6 +54,20 @@
           class="edit-button"
         />
       </div>
+      <div v-if="!isRecording">
+        <img
+          src="@/assets/icons8-record-64.png"
+          @click="recordAudio"
+          class="record-button"
+        />
+      </div>
+      <div v-else>
+        <img
+          src="@/assets/icons8-stop-64.png"
+          @click="stopRecording"
+          class="stop-button"
+        />
+      </div>
     </div>
     <div class="column-right">
       <br />
@@ -138,6 +152,7 @@ export default {
       editDisplayName: false,
       editableDisplayName: null,
       audio: navigator.mediaDevices.getUserMedia({ audio: true }),
+      isRecording: false,
     };
   },
   methods: {
@@ -202,6 +217,27 @@ export default {
           name: this.editableDisplayName,
         })
       );
+    },
+    recordAudio: function () {
+      this.isRecording = true;
+      this.recordingData = [];
+      this.audio.then((stream) => {
+        this.recorder = new MediaRecorder(stream);
+        this.recorder.start(0); //0 for as little audio buffering as possible so recording starts immediately
+        this.recorder.ondataavailable = (event) => {
+          this.recordingData.push(event.data);
+        };
+      });
+    },
+    stopRecording: function () {
+      this.isRecording = false;
+      this.recorder.stop();
+      const recordingFile = new Blob(this.recordingData, {
+        type: "audio/ogg; codecs=opus",
+      });
+      const audioSrc = window.URL.createObjectURL(recordingFile);
+      const clip = new Audio(audioSrc);
+      clip.play();
     },
   },
   mounted() {
@@ -337,5 +373,19 @@ export default {
 }
 .edit-button:hover {
   background: #e0e0e0;
+}
+.record-button {
+  cursor: pointer;
+  transition: 0.2s;
+}
+.record-button:hover {
+  transform: scale(1.1);
+}
+.stop-button {
+  cursor: pointer;
+  transition: 0.2s;
+}
+.stop-button:hover {
+  transform: scale(1.1);
 }
 </style>
