@@ -243,13 +243,9 @@ export default {
       this.recordingFile = new Blob(this.recordingData, {
         type: "audio/ogg; codecs=opus",
       });
-      const audioSrc = window.URL.createObjectURL(this.recordingFile);
-      const clip = new Audio(audioSrc);
-      clip.play();
       this.roomWebSocket.send(
         JSON.stringify({
           command: "fetch_upload_url",
-          filename: "helloworld",
         })
       );
     },
@@ -320,6 +316,10 @@ export default {
         fetch(data.upload_url, requestOptions)
           .then((response) => console.log(response))
           .catch((error) => console.log(error));
+      } else if ("download_url" in data) {
+        const audioSrc = data.download_url;
+        const clip = new Audio(audioSrc);
+        clip.play();
       }
     };
     this.roomWebSocket.onerror = (e) => {
