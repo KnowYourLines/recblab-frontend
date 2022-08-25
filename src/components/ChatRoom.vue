@@ -55,14 +55,22 @@
         />
       </div>
       <br /><br />
-      <div v-if="!isRecording">
+      <div v-if="showPlayButton">
+        <img
+          src="@/assets/icons8-play-60.png"
+          @click="playAudio"
+          class="play-button"
+        />
+      </div>
+      <div v-else-if="!isRecording && !isPlaying">
         <img
           src="@/assets/icons8-record-64.png"
           @click="recordAudio"
           class="record-button"
         />
       </div>
-      <div v-else>
+      <div v-else-if="!isPlaying && isRecording">
+        Recording response:<br /><br />
         <img
           src="@/assets/icons8-stop-64.png"
           @click="stopRecording"
@@ -70,6 +78,7 @@
         />
         <CountdownTimer @times-up="timesUp"></CountdownTimer>
       </div>
+      <div v-else-if="isPlaying && !isRecording">Playing...</div>
       <br />
     </div>
     <div class="column-right">
@@ -158,9 +167,12 @@ export default {
       editableDisplayName: null,
       audio: navigator.mediaDevices.getUserMedia({ audio: true }),
       isRecording: false,
+      isPlaying: false,
       recordingFile: null,
       recorder: null,
       recordingData: [],
+      showPlayButton: false,
+      audioPlayer: new Audio(),
     };
   },
   methods: {
@@ -252,6 +264,10 @@ export default {
     timesUp: function () {
       this.stopRecording();
     },
+    playAudio: function () {
+      this.showPlayButton = false;
+      this.audioPlayer.play();
+    },
   },
   mounted() {
     this.shareable = typeof navigator.share === "function";
@@ -317,9 +333,18 @@ export default {
           .then((response) => console.log(response))
           .catch((error) => console.log(error));
       } else if ("download_url" in data) {
-        const audioSrc = data.download_url;
-        const clip = new Audio(audioSrc);
-        clip.play();
+        this.audioPlayer.src = data.download_url;
+        const playPromise = this.audioPlayer.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              // Autoplay started!
+            })
+            .catch(() => {
+              // Autoplay was prevented.
+              this.showPlayButton = true;
+            });
+        }
       }
     };
     this.roomWebSocket.onerror = (e) => {
@@ -327,6 +352,13 @@ export default {
     };
     this.roomWebSocket.onclose = () => {
       console.log("Room WebSocket closed");
+    };
+    this.audioPlayer.onended = () => {
+      this.isPlaying = false;
+      this.recordAudio();
+    };
+    this.audioPlayer.onplay = () => {
+      this.isPlaying = true;
     };
   },
 };
@@ -412,6 +444,13 @@ export default {
   transition: 0.2s;
 }
 .stop-button:hover {
+  transform: scale(1.1);
+}
+.play-button {
+  cursor: pointer;
+  transition: 0.2s;
+}
+.play-button:hover {
   transform: scale(1.1);
 }
 </style>
