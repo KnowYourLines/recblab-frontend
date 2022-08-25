@@ -70,7 +70,7 @@
         />
         <CountdownTimer @times-up="timesUp"></CountdownTimer>
       </div>
-      <br/>
+      <br />
     </div>
     <div class="column-right">
       <br />
@@ -158,6 +158,9 @@ export default {
       editableDisplayName: null,
       audio: navigator.mediaDevices.getUserMedia({ audio: true }),
       isRecording: false,
+      recordingFile: null,
+      recorder: null,
+      recordingData: [],
     };
   },
   methods: {
@@ -237,12 +240,18 @@ export default {
     stopRecording: function () {
       this.isRecording = false;
       this.recorder.stop();
-      const recordingFile = new Blob(this.recordingData, {
+      this.recordingFile = new Blob(this.recordingData, {
         type: "audio/ogg; codecs=opus",
       });
-      const audioSrc = window.URL.createObjectURL(recordingFile);
+      const audioSrc = window.URL.createObjectURL(this.recordingFile);
       const clip = new Audio(audioSrc);
       clip.play();
+      this.roomWebSocket.send(
+        JSON.stringify({
+          command: "fetch_upload_url",
+          filename: "helloworld",
+        })
+      );
     },
     timesUp: function () {
       this.stopRecording();
@@ -302,6 +311,15 @@ export default {
       } else if ("display_name" in data) {
         this.displayName = data.display_name;
         this.editableDisplayName = data.display_name;
+      } else if ("upload_url" in data) {
+        const requestOptions = {
+          method: "PUT",
+          headers: { "Content-Type": "application/ogg" },
+          body: this.recordingFile,
+        };
+        fetch(data.upload_url, requestOptions)
+          .then((response) => console.log(response))
+          .catch((error) => console.log(error));
       }
     };
     this.roomWebSocket.onerror = (e) => {
