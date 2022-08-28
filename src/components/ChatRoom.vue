@@ -336,6 +336,10 @@ export default {
         this.audioPlayer.src = data.download_url;
         navigator.permissions.query({ name: "microphone" }).then((result) => {
           if (result.state === "granted") {
+            if (this.isRecording) {
+              this.isRecording = false;
+              this.recorder.stop();
+            }
             const playPromise = this.audioPlayer.play();
             if (playPromise !== undefined) {
               playPromise
@@ -343,7 +347,6 @@ export default {
                   // Autoplay started!
                 })
                 .catch((error) => {
-                  console.error(error)
                   // Autoplay was prevented.
                   this.showPlayButton = true;
                 });
