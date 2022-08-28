@@ -334,17 +334,24 @@ export default {
           .catch((error) => console.log(error));
       } else if ("download_url" in data) {
         this.audioPlayer.src = data.download_url;
-        const playPromise = this.audioPlayer.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              // Autoplay started!
-            })
-            .catch(() => {
-              // Autoplay was prevented.
-              this.showPlayButton = true;
-            });
-        }
+        navigator.permissions.query({ name: "microphone" }).then((result) => {
+          if (result.state === "granted") {
+            const playPromise = this.audioPlayer.play();
+            if (playPromise !== undefined) {
+              playPromise
+                .then(() => {
+                  // Autoplay started!
+                })
+                .catch(() => {
+                  // Autoplay was prevented.
+                  this.showPlayButton = true;
+                });
+            }
+          } else {
+            this.audio = navigator.mediaDevices.getUserMedia({ audio: true });
+            this.showPlayButton = true;
+          }
+        });
       }
     };
     this.roomWebSocket.onerror = (e) => {
