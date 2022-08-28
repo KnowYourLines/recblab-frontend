@@ -250,7 +250,6 @@ export default {
       });
     },
     stopRecording: function () {
-      console.log('recording stopped')
       this.isRecording = false;
       this.recorder.stop();
       this.recordingFile = new Blob(this.recordingData, {
@@ -343,7 +342,8 @@ export default {
                 .then(() => {
                   // Autoplay started!
                 })
-                .catch(() => {
+                .catch((error) => {
+                  console.error(error)
                   // Autoplay was prevented.
                   this.showPlayButton = true;
                 });
@@ -362,7 +362,6 @@ export default {
       console.log("Room WebSocket closed");
     };
     this.audioPlayer.onended = () => {
-      console.log('audio ended')
       this.isPlaying = false;
       this.recordAudio();
     };
