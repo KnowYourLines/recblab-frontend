@@ -34,10 +34,12 @@
           <br />
           <div class="notification" @click="visitRoom(notification.room)">
             <strong> {{ notification.room__display_name }}</strong>
-            <br />{{
-              notification.audio_uploaded_by__display_name
-            }}
-            spoke.<br />
+            <div v-if="notification.audio_uploaded_by__display_name">
+              <br />{{
+                notification.audio_uploaded_by__display_name
+              }}
+              spoke.<br />
+            </div>
             <br />{{ notification.timestamp }} <br />
           </div>
           <button
