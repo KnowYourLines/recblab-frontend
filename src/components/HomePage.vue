@@ -35,10 +35,8 @@
           <div class="notification" @click="visitRoom(notification.room)">
             <strong> {{ notification.room__display_name }}</strong>
             <div v-if="notification.audio_uploaded_by__display_name">
-              <br />{{
-                notification.audio_uploaded_by__display_name
-              }}
-              spoke.<br />
+              {{ notification.audio_uploaded_by__display_name }}
+              spoke.
             </div>
             <br />{{ notification.timestamp }} <br />
           </div>
