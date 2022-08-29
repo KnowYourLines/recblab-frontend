@@ -45,7 +45,7 @@
             <div v-else>
               <br />
             </div>
-            <br />{{ notification.timestamp }} <br />
+            {{ notification.timestamp }} <br />
           </div>
           <button
             type="submit"
