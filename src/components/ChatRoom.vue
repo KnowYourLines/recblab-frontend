@@ -269,7 +269,7 @@ export default {
       this.audioPlayer.play();
     },
   },
-  mounted() {
+  beforeMount() {
     this.shareable = typeof navigator.share === "function";
     const backendUrl = new URL(process.env.VUE_APP_BACKEND_URL);
     const ws_scheme = backendUrl.protocol == "https:" ? "wss" : "ws";

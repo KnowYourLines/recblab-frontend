@@ -122,7 +122,7 @@ export default {
       );
     },
   },
-  mounted() {
+  beforeMount() {
     const backendUrl = new URL(process.env.VUE_APP_BACKEND_URL);
     const ws_scheme = backendUrl.protocol == "https:" ? "wss" : "ws";
     const path =
