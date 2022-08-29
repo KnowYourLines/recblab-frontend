@@ -32,7 +32,10 @@
       <div>
         <span v-for="notification in notifications" :key="notification.room">
           <br />
-          <div class="notification" @click="visitRoom(notification.room)">
+          <div
+            :class="notification.read ? 'notification' : 'unread-notification'"
+            @click="visitRoom(notification.room)"
+          >
             <strong> {{ notification.room__display_name }}</strong>
             <br />
             <div v-if="notification.audio_uploaded_by__display_name">
@@ -186,6 +189,17 @@ export default {
   cursor: pointer;
 }
 .notification:hover {
+  background: #e0e0e0;
+}
+.unread-notification {
+  padding: 6px 10px;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: #10b981;
+  background-color: rgb(76, 178, 247);
+  cursor: pointer;
+}
+.unread-notification:hover {
   background: #e0e0e0;
 }
 .btn:hover {
