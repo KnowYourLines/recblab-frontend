@@ -1,4 +1,4 @@
-# blabsnap-frontend
+# recblab-frontend
 
 ## Project setup
 ```
