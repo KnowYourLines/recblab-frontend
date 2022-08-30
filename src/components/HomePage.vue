@@ -88,9 +88,6 @@ export default {
   },
   methods: {
     createNewRoom: function () {
-      if (this.userWebSocket) {
-        this.userWebSocket.close();
-      }
       const room = uuidv4();
       this.$emit("new-room", room);
     },
@@ -142,9 +139,6 @@ export default {
       this.userId +
       "/?token=" +
       this.authToken;
-    if (this.userWebSocket) {
-      this.userWebsocket.close();
-    }
     this.userWebSocket = new WebSocket(path);
     this.userWebSocket.onopen = () => {
       console.log("User WebSocket open");

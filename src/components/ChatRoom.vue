@@ -185,25 +185,16 @@ export default {
   },
   methods: {
     returnHome: function () {
-      if (this.roomWebSocket) {
-        this.roomWebSocket.close();
-      }
       const url = new URL(window.location.href);
       window.location.href = url.origin;
     },
     returnHomeNewTab: function () {
-      if (this.roomWebSocket) {
-        this.roomWebSocket.close();
-      }
       const url = new URL(window.location.href);
       window.open(url.origin, "_blank");
     },
     refreshPage: function () {
-      if (this.roomWebSocket) {
-        this.roomWebSocket.close();
-      }
-      const url = new URL(window.location.href);
       window.location.href = url;
+      location.reload();
     },
     updatePrivacy: function () {
       if (!this.privateRoom) {
@@ -298,9 +289,6 @@ export default {
       this.room +
       "/?token=" +
       this.authToken;
-    if (this.roomWebSocket) {
-      this.roomWebsocket.close();
-    }
     this.roomWebSocket = new WebSocket(path);
     this.roomWebSocket.onopen = () => {
       console.log("Room WebSocket open");
