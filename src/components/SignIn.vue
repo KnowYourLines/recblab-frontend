@@ -28,7 +28,6 @@ export default {
     this.uiConfig = {
       signInSuccessUrl: window.location.href,
       signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         {
           provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
           defaultCountry: "GB",
