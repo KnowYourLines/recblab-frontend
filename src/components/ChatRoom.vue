@@ -379,6 +379,7 @@ export default {
     };
     this.roomWebSocket.onclose = () => {
       console.log("Room WebSocket closed");
+      location.reload();
     };
     this.audioPlayer.onended = () => {
       this.isPlaying = false;

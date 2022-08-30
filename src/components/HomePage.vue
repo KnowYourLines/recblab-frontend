@@ -169,6 +169,7 @@ export default {
     };
     this.userWebSocket.onclose = () => {
       console.log("User WebSocket closed");
+      location.reload();
     };
   },
 };
