@@ -35,6 +35,8 @@
           <div
             :class="notification.read ? 'notification' : 'unread-notification'"
             @click="visitRoom(notification.room)"
+            @contextmenu="visitRoomNewTab(notification.room)"
+            @contextmenu.prevent
           >
             <strong> {{ notification.room__display_name }}</strong>
             <br />
@@ -96,6 +98,11 @@ export default {
       const url = new URL(window.location.href);
       url.searchParams.set("room", room);
       window.location.href = url;
+    },
+    visitRoomNewTab: function (room) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("room", room);
+      window.open(url, "_blank");
     },
     exitRoom: function (room) {
       this.userWebSocket.send(

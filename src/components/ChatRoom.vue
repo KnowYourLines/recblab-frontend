@@ -3,6 +3,8 @@
     <img
       src="@/assets/icons8-home-48.png"
       @click="returnHome"
+      @contextmenu="returnHomeNewTab"
+      @contextmenu.prevent
       class="home-button"
     /><img
       src="@/assets/icons8-update-left-rotation-50.png"
@@ -17,12 +19,15 @@
         <img
           src="@/assets/icons8-share-30.png"
           @click="share"
+          @contextmenu.prevent
           class="share-button"
         />
       </div>
       <img
         src="@/assets/icons8-home-48.png"
         @click="returnHome"
+        @contextmenu="returnHomeNewTab"
+        @contextmenu.prevent
         class="home-button"
       />
     </div>
@@ -128,8 +133,11 @@
     <img
       src="@/assets/icons8-home-48.png"
       @click="returnHome"
+      @contextmenu="returnHomeNewTab"
+      @contextmenu.prevent
       class="home-button"
-    /><br />
+    />
+    <br />
     User not allowed in private room. Access requested.
   </div>
 </template>
@@ -182,6 +190,13 @@ export default {
       }
       const url = new URL(window.location.href);
       window.location.href = url.origin;
+    },
+    returnHomeNewTab: function () {
+      if (this.roomWebSocket) {
+        this.roomWebSocket.close();
+      }
+      const url = new URL(window.location.href);
+      window.open(url.origin, "_blank");
     },
     refreshPage: function () {
       if (this.roomWebSocket) {
