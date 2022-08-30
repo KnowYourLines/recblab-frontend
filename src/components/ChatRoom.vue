@@ -193,7 +193,6 @@ export default {
       window.open(url.origin, "_blank");
     },
     refreshPage: function () {
-      window.location.href = url;
       location.reload();
     },
     updatePrivacy: function () {
