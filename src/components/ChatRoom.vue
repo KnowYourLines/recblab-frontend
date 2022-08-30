@@ -345,6 +345,7 @@ export default {
               playPromise
                 .then(() => {
                   // Autoplay started!
+                  this.showPlayButton = false;
                 })
                 .catch(() => {
                   // Autoplay was prevented.
