@@ -75,11 +75,15 @@
         />
       </div>
       <div v-else-if="!isPlaying && isRecording">
-        Recording response:<br /><br />
+        Recording now and sending response in...<br /><br />
         <img
-          src="@/assets/icons8-stop-64.png"
-          @click="stopRecording"
-          class="stop-button"
+          src="@/assets/icons8-checkmark-48.png"
+          @click="saveRecording"
+          class="stop-recording-button"
+        /><img
+          src="@/assets/icons8-cancel-48.png"
+          @click="cancelRecording"
+          class="stop-recording-button"
         />
         <CountdownTimer @times-up="timesUp"></CountdownTimer>
       </div>
@@ -254,7 +258,7 @@ export default {
         };
       });
     },
-    stopRecording: function () {
+    saveRecording: function () {
       this.isRecording = false;
       this.recorder.stop();
       this.recordingFile = new Blob(this.recordingData, {
@@ -266,8 +270,15 @@ export default {
         })
       );
     },
+    cancelRecording: function () {
+      this.isRecording = false;
+      this.recorder.stop();
+      if (this.audioPlayer.src != "") {
+        this.showPlayButton = true;
+      }
+    },
     timesUp: function () {
-      this.stopRecording();
+      this.saveRecording();
     },
     playAudio: function () {
       this.showPlayButton = false;
@@ -454,11 +465,12 @@ export default {
 .record-button:hover {
   transform: scale(1.1);
 }
-.stop-button {
+.stop-recording-button {
+  padding: 6px 10px;
   cursor: pointer;
   transition: 0.2s;
 }
-.stop-button:hover {
+.stop-recording-button:hover {
   transform: scale(1.1);
 }
 .play-button {
